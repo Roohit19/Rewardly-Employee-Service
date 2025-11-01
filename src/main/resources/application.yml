@@ -8,7 +8,7 @@ spring:
   sql:
     init:
       mode: NEVER 
-#     To avoid duplication use mode never  mode: NEVER, data.sql file
+#     To avoid duplication of inserting data in database use  mode: NEVER, data.sql file
 #     mode: always
-#			To initalize as application started   mode: always, data.sql file
+#			To initalize or insert data into database as application started use   mode: always, data.sql file
 
