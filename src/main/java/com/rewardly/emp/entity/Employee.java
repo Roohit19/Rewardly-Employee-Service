@@ -23,9 +23,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+// @Data generates equals() and hashCode() methods based on all non-static fields by default.
+//  This can cause issues in JPA entities if the ID is auto-generated,
+// as two different persisted entities with identical field values (but different IDs) 
+// may be considered equal.
+
+// Override equals() and hashCode() manually based on the ID only.
+// Alternatively, use Lombok’s @EqualsAndHashCode(onlyExplicitlyIncluded = true) 
+// and mark the ID field with @EqualsAndHashCode.Include.
+// Avoid using @Data directly on JPA entities; prefer @Getter, @Setter, and explicit equals/hashCode methods.
+
+
 @Entity
-//@Data equal() and hashcode() object equivalent based on all fields
-//two entities with same data and different Ids ,they'll be equal
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -35,10 +44,15 @@ import lombok.ToString;
 @Table(name="employees",
 indexes= {@Index(name="idx_employee_designation",columnList="designation")})
 public class Employee {
-	//Keep it column name database friendly like Table="employee" then
-	//column should be column="name"(not emp_name) according to standards
-	//add indexes on frequently used fields for database optimization
-	//In Mysql GenerationType.AUTO behaves like GenerationType.IDENTITY
+	// Follow database naming conventions:
+// If the table name is "employee", use column names like "name" instead of "emp_name".
+// Add indexes on frequently queried columns to improve query performance.
+//
+// Note:
+//  In MySQL, GenerationType.AUTO behaves like GenerationType.IDENTITY.
+//  GenerationType.AUTO creates a separate sequence table internally.
+//  GenerationType.IDENTITY uses the database's native auto-increment feature.
+
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,8 +71,10 @@ public class Employee {
 	@Column(nullable = false, name = "designation",length=100)
 	private String empDesignation;
 
-	//For salary and money/currency, scientific calculations 
-	//use BigDecimal for approxValue with less precision 
+// For salary, monetary values, or scientific computations,
+// use BigDecimal to maintain precision and avoid floating-point rounding errors.
+// Use double only when approximate values are acceptable and precision is not critical.
+
 	
 //	@DecimalMin(value="0.0",inclusive=false,message="Salary must be greater than zero")
 	@Column(nullable = false, name = "salary",precision=10,scale=2)
