@@ -24,7 +24,7 @@ public class EmployeeController {
 
 	private final EmployeeService employeeService;
 
-	@PostMapping("/create")
+	@PostMapping
 	public ResponseEntity<String> createEmployee(@RequestBody Employee employee) {
 
 		return ResponseEntity.ok(employeeService.createEmployee(employee));
