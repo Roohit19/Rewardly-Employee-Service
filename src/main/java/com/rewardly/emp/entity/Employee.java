@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -41,7 +42,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @Builder(toBuilder=true)
-@Table(name="employees",
+@Table(name="employees", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name", "designation"})
+    },
 indexes= {@Index(name="idx_employee_designation",columnList="designation")})
 public class Employee {
 	// Follow database naming conventions:

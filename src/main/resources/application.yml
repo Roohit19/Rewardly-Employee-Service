@@ -4,6 +4,11 @@ server:
 spring:
   profiles:
     active: local
+
   sql:
     init:
-      mode: always
+      mode: NEVER 
+#     To avoid duplication use mode never  mode: NEVER, data.sql file
+#     mode: always
+#			To initalize as application started   mode: always, data.sql file
+
