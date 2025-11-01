@@ -4,6 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+### Local Properties ###
+src/main/resources/application-local.yml
+
 ### STS ###
 .apt_generated
 .classpath
@@ -33,3 +36,65 @@ build/
 .vscode/
 src/main/resources/application-local.yml
 
+# =========================
+# General
+# =========================
+HELP.md
+target/
+build/
+!**/src/main/**/target/
+!**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# =========================
+# Maven Wrapper
+# =========================
+.mvn/wrapper/maven-wrapper.jar
+
+# =========================
+# Local Configuration
+# =========================
+src/main/resources/application-local.yml
+
+# =========================
+# Spring Tool Suite (STS)
+# =========================
+.apt_generated/
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+
+# =========================
+# IntelliJ IDEA
+# =========================
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# =========================
+# NetBeans
+# =========================
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# =========================
+# Visual Studio Code
+# =========================
+.vscode/
+
+# =========================
+# Logs and OS Files
+# =========================
+*.log
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
