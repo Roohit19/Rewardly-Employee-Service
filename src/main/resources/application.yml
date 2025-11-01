@@ -1,14 +1,43 @@
+# Rewardly Employee Service - Base Configuration
+# This file contains common settings for all environments
+# Profile-specific settings are in application-{profile}.yml files
+
 server:
   port: 8082
 
 spring:
   profiles:
-    active: local
+    active: local  # Default profile; override with SPRING_PROFILES_ACTIVE=prod in production
+
+  application:
+    name: Rewardly-Employee-Service
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update  # Default for dev; override to 'validate' in prod
+    show-sql: false
+    open-in-view: false  # Disable to prevent lazy loading issues
+    properties:
+      hibernate:
+        '[format_sql]': true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  devtools:
+    restart:
+      enabled: true
+      exclude: static/**,public/**,templates/**
 
   sql:
     init:
-      mode: NEVER 
-#     To avoid duplication of inserting data in database use  mode: NEVER, data.sql file
-#     mode: always
-#			To initalize or insert data into database as application started use   mode: always, data.sql file
+      mode: never  # Avoid executing data.sql automatically in production
+#     mode: always → use only in dev/test profiles to pre-populate sample data
 
+
+logging:
+  level:
+    '[org.springframework]': info
+    '[org.hibernate.SQL]': warn
+    '[org.hibernate.type.descriptor.sql.BasicBinder]': off

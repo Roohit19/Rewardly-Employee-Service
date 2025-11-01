@@ -1,18 +1,48 @@
+# Rewardly Employee Service - Local Development Profile
+# This profile is used for local development with enhanced debugging
+
 spring:
+  config:
+    activate:
+      on-profile: local
+
   datasource:
-    url: jdbc:mysql://localhost:3306/rewardly_employee_db?createDatabaseIfNotExist=true
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rewardly_employee_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+    hikari:
+      pool-name: RewardlyHikariCP
+      minimum-idle: 5
+      maximum-pool-size: 10
+      idle-timeout: 300000      # 5 minutes
+      connection-timeout: 20000  # 20 seconds
+      max-lifetime: 1800000      # 30 minutes
+      auto-commit: true
+      leak-detection-threshold: 60000  # Warn if connection held > 60s
 
   jpa:
-    hibernate:
-      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
-        format_sql: true
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+        '[format_sql]': true          # Pretty-print SQL for readability
+        '[use_sql_comments]': true    # Add comments to SQL queries
+        '[highlight_sql]': true       # Color-code SQL in console (if supported)
+    hibernate:
+      ddl-auto: update
 
-  application:
-    name: Rewardly-Employee-Service
+  sql:
+    init:
+      mode: NEVER    # Avoid executing data.sql automatically in production
+#      mode: ALWAYS    Enable if you have data.sql for test data
+#			 platform: mysql Uncomment if using platform-specific scripts
+
+
+logging:
+  level:
+    '[com.rewardly]': DEBUG
+    '[org.hibernate.SQL]': DEBUG
+    '[org.hibernate.type.descriptor.sql.BasicBinder]': TRACE  # Show parameter values
+    '[org.springframework.web]': DEBUG
+    '[org.springframework.transaction]': DEBUG  # Helpful for debugging transactions
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
