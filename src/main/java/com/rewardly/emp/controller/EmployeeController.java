@@ -2,8 +2,10 @@ package com.rewardly.emp.controller;
 
 import java.util.List;
 
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+//import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,18 +24,23 @@ import com.rewardly.emp.service.EmployeeService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("/api/v1/employees")
 @RequiredArgsConstructor
+@Slf4j
 public class EmployeeController {
+//Manual Logging -alternative is @Slf4j
+//	private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
+
 
 	private final EmployeeService employeeService;
 
 	@PostMapping
 	public ResponseEntity<ApiResponse<EmployeeResponse>> createEmployee(@RequestBody EmployeeRequest employeeRequest, 
 		HttpServletRequest request) {
-		
+		log.info("Api Request: Creatin new employee with name: {}",employeeRequest.getEmpName());
 		EmployeeResponse employeeSaved = employeeService.createEmployee(employeeRequest);
 		ApiResponse<EmployeeResponse> apiResponse = ApiResponse.<EmployeeResponse>builder()
 		.success(true)
@@ -42,6 +49,7 @@ public class EmployeeController {
 		.data(employeeSaved)
 		.path(request.getRequestURI())
 		.build();
+		log.info("Api Response: Successfully created employee with ID: {}",employeeSaved.getEmpId() );
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
 
@@ -54,7 +62,7 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployee(@PathVariable Long id,  HttpServletRequest request) {
+	public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployee(@PathVariable String id,  HttpServletRequest request) {
 		EmployeeResponse employeeResponse = employeeService.getEmployee(id);
 		ApiResponse<EmployeeResponse> apiResponse = ApiResponse.<EmployeeResponse>builder()
 				   .success(true)
@@ -83,13 +91,13 @@ public class EmployeeController {
 	}
 
 	@PutMapping("/{id}")
-	public Employee updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
+	public Employee updateEmployee(@PathVariable String id, @RequestBody Employee employee) {
 		Employee updateEmployee = employeeService.updateEmployee(id, employee);
 		return updateEmployee;
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteEmployee(@PathVariable Long id) {
+	public ResponseEntity<String> deleteEmployee(@PathVariable String id) {
 		String message = employeeService.deleteEmployee(id);
 		return ResponseEntity.ok(message);
 	}

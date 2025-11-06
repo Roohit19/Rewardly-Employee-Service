@@ -1,0 +1,16 @@
+=06-11-2025
+
+-Id type change to custom id style=rewardlyEmp-20251106-164405-8157
+-Added Log(@Slf4j)
+	-configuration changes for log
+-Adding Exception
+	-BaseException class
+	-EmployeeNotFoundException
+	-InvalidEmployeeDataException
+	-ErrorResponse( DTO )
+	-GlobalExceptionHandler
+	
+-Service
+	-Exception throw
+	-@Transactional add
+	

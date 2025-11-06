@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL) // Ignore null fields
 public class EmployeeResponse {
 	
-	private Long empId;
+	private String empId;
 	private String empName;
 	private String empDesignation;
 	private BigDecimal empSalary;

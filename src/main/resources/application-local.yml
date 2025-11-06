@@ -1,65 +1,50 @@
 # Rewardly Employee Service - Local Development Profile
 # This profile is used for local development with enhanced debugging
 
-#default local profile is enabled
 spring:
   config:
     activate:
-      on-profile: local			
+      on-profile: local     
 
-#url -> 
-#createDatabaseIfNotExist=true: auto-creates DB if missing.
-#useSSL=false: disables SSL for local use.
-#allowPublicKeyRetrieval=true: fixes connection issue for MySQL 8+.
-#serverTimezone=UTC: ensures consistent timestamps.
-#${DB_USERNAME:root} uses environment variable if set, else defaults to root.
   datasource:
     url: jdbc:mysql://localhost:3306/rewardly_employee_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:root}
-#HikariCP Connection Pool
-#Keeps 5–10 connections ready.
-#Idle connections removed after 5 min.
-#Timeout 20 s if no connection available.
-#Connections refreshed every 30 min.
-#Logs warning if a connection stays open > 60 s (possible leak).
+    password: ${DB_PASSWORD:Mysql@123}
     hikari:
       pool-name: RewardlyHikariCP
       minimum-idle: 5
       maximum-pool-size: 10
-      idle-timeout: 300000      # 5 minutes
-      connection-timeout: 20000  # 20 seconds
-      max-lifetime: 1800000      # 30 minutes
+      idle-timeout: 300000        # 5 minutes
+      connection-timeout: 20000   # 20 seconds
+      max-lifetime: 1800000       # 30 minutes
       auto-commit: true
       leak-detection-threshold: 60000  # Warn if connection held > 60s
-#show-sql: logs generated SQL.
-#format_sql: pretty SQL.
-#use_sql_comments: adds comments in SQL logs.
-#highlight_sql: color output (supported terminals).
-#ddl-auto: update: updates schema automatically (good for local, unsafe for prod).
+
   jpa:
     show-sql: true
     properties:
       hibernate:
-        '[format_sql]': true          # Pretty-print SQL for readability
-        '[use_sql_comments]': true    # Add comments to SQL queries
-        '[highlight_sql]': true       # Color-code SQL in console (if supported)
+        '[format_sql]': true
+        '[use_sql_comments]': true
+        '[highlight_sql]': true
     hibernate:
       ddl-auto: update
 
   sql:
     init:
-      mode: NEVER    # Avoid executing data.sql automatically in production
-#mode: ALWAYS    Enable if you have data.sql for test data
-#platform: mysql Uncomment if using platform-specific scripts
+      mode: NEVER  # Avoid executing data.sql automatically in production
 
-
+# -------------------------
+# Logging Configuration
+# -------------------------
 logging:
   level:
     '[com.rewardly]': DEBUG
     '[org.hibernate.SQL]': DEBUG
-    '[org.hibernate.type.descriptor.sql.BasicBinder]': TRACE  # Show parameter values
+    '[org.hibernate.type.descriptor.sql.BasicBinder]': TRACE
     '[org.springframework.web]': DEBUG
-    '[org.springframework.transaction]': DEBUG  # Helpful for debugging transactions
+    '[org.springframework.transaction]': DEBUG
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/rewardly-employee-service.log   # Save logs locally in the "logs" folder

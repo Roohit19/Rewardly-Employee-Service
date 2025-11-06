@@ -58,9 +58,9 @@ public class Employee {
 
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id",updatable = false, nullable = false)
-	private Long empId;
+	private String empId;
 
 	@Column(nullable = false, name = "name")
 	@NotBlank(message="Employee name is required")
