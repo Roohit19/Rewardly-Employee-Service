@@ -5,7 +5,10 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.rewardly.emp.employeedto.EmployeeRequest;
+import com.rewardly.emp.employeedto.EmployeeResponse;
 import com.rewardly.emp.entity.Employee;
+import com.rewardly.emp.mapper.EmployeeMapper;
 import com.rewardly.emp.repository.EmployeeRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -16,29 +19,31 @@ public class EmployeeService {
 
 
 	private final EmployeeRepository employeeRepository;
-	
+	private final EmployeeMapper employeeMapper;
 
-	public String createEmployee(Employee employee) {
+	public EmployeeResponse createEmployee(EmployeeRequest employeeRequest) {
 		// Logic to save employee to the database
+		Employee employee = employeeMapper.toEntity(employeeRequest);
+		Employee savedEmployee = employeeRepository.save(employee);
+		//return savedEmployee;
+		return employeeMapper.toResponse(savedEmployee);
 
-		Employee e = employeeRepository.save(employee);
-
-		if (e != null) {
-			return "Employee created successfully";
-		} else {
-			return "Failed to create employee";
-		}
 
 	}
 
-	public Employee getEmployee(Long id) {
-		Optional<Employee> emp = employeeRepository.findById(id);
-		return emp.get();
+	public EmployeeResponse getEmployee(Long id) {
+		Optional<Employee> employeeOptional = employeeRepository.findById(id);
+		Employee employee = employeeOptional.get();
+		
+		return employeeMapper.toResponse(employee);
 	}
 
-	public List<Employee> getAllEmployees() {
+	public List<EmployeeResponse> getAllEmployees() {
 		List<Employee> allEmployees = employeeRepository.findAll();
-		return allEmployees;
+		
+		List<EmployeeResponse> responseList = employeeMapper.toResponseList(allEmployees);
+		
+		return responseList;
 	}
 
 	public Employee updateEmployee(Long id, Employee employee) {

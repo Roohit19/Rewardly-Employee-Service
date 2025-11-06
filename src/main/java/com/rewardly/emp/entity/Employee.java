@@ -93,6 +93,10 @@ public class Employee {
 	@Column(nullable = false, name = "performance_rating")
 	private int empPerformanceRating;
 	
+
+
+
+
 	
 
 }

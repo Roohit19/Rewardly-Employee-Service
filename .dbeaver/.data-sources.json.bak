@@ -1,0 +1,64 @@
+{
+	"folders": {},
+	"connections": {
+		"mysql8-19a44b0c841-705ae181f8baea46": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "localhost",
+			"save-password": true,
+			"configuration": {
+				"host": "localhost",
+				"port": "3306",
+				"url": "jdbc:mysql://localhost:3306/?allowPublicKeyRetrieval\u003dtrue\u0026useSSL\u003dfalse",
+				"configurationType": "URL",
+				"home": "C:\\Program Files\\MySQL\\MySQL Server 8.0",
+				"type": "dev",
+				"closeIdleConnection": true,
+				"properties": {
+					"rewriteBatchedStatements": "true",
+					"connectTimeout": "20000",
+					"enabledTLSProtocols": "TLSv1,TLSv1.1,TLSv1.2,TLSv1.3"
+				},
+				"provider-properties": {
+					"@dbeaver-show-all-dbs@": "true"
+				},
+				"auth-model": "native"
+			}
+		},
+		"mysql8-19a45fb3f88-3a1998954eb32510": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "localhost 2",
+			"save-password": true,
+			"configuration": {
+				"host": "localhost",
+				"port": "3306",
+				"url": "jdbc:mysql://localhost:3306/",
+				"configurationType": "URL",
+				"home": "C:\\Program Files\\MySQL\\MySQL Server 8.0",
+				"type": "dev",
+				"closeIdleConnection": true,
+				"provider-properties": {
+					"@dbeaver-show-all-dbs@": "true"
+				},
+				"auth-model": "native"
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false,
+			"smart-commit": false,
+			"smart-commit-recover": true,
+			"auto-close-transactions": true,
+			"close-transactions-period": 1800,
+			"auto-close-connections": true,
+			"close-connections-period": 14400
+		}
+	}
+}

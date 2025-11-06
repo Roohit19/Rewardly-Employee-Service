@@ -2,6 +2,8 @@ package com.rewardly.emp.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,9 +14,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.rewardly.emp.employeedto.ApiResponse;
+import com.rewardly.emp.employeedto.EmployeeRequest;
+import com.rewardly.emp.employeedto.EmployeeResponse;
 import com.rewardly.emp.entity.Employee;
 import com.rewardly.emp.service.EmployeeService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -25,9 +31,21 @@ public class EmployeeController {
 	private final EmployeeService employeeService;
 
 	@PostMapping
-	public ResponseEntity<String> createEmployee(@RequestBody Employee employee) {
+	public ResponseEntity<ApiResponse<EmployeeResponse>> createEmployee(@RequestBody EmployeeRequest employeeRequest, 
+		HttpServletRequest request) {
+		
+		EmployeeResponse employeeSaved = employeeService.createEmployee(employeeRequest);
+		ApiResponse<EmployeeResponse> apiResponse = ApiResponse.<EmployeeResponse>builder()
+		.success(true)
+		.statusCode(HttpStatus.CREATED.value())
+		.message("Employee created successfully")
+		.data(employeeSaved)
+		.path(request.getRequestURI())
+		.build();
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
 
-		return ResponseEntity.ok(employeeService.createEmployee(employee));
+		//return ResponseEntity.ok();
 	}
 
 	@GetMapping("/hello")
@@ -36,15 +54,31 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/{id}")
-	public Employee getEmployee(@PathVariable Long id) {
-		Employee employee = employeeService.getEmployee(id);
-		return employee;
+	public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployee(@PathVariable Long id,  HttpServletRequest request) {
+		EmployeeResponse employeeResponse = employeeService.getEmployee(id);
+		ApiResponse<EmployeeResponse> apiResponse = ApiResponse.<EmployeeResponse>builder()
+				   .success(true)
+				   .statusCode(HttpStatus.OK.value())
+				   .message("Employee retrieved successfully")
+				   .data(employeeResponse)
+				   .path(request.getRequestURI())
+				   .build();
+		
+		
+		return  ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
 	}
 
 	@GetMapping
-	public List<Employee> getAllEmployees() {
-		List<Employee> allEmployees = employeeService.getAllEmployees();
-		return allEmployees;
+	public ApiResponse<List<EmployeeResponse>> getAllEmployees(HttpServletRequest request) {
+		 List<EmployeeResponse> allEmployees = employeeService.getAllEmployees();
+		 ApiResponse<List<EmployeeResponse>> apiResponse = ApiResponse.<List<EmployeeResponse>>builder()
+		 		    .success(true)
+		 		    .statusCode(HttpStatus.OK.value())
+		 		    .message("All employees retrieved successfully")
+		 		    .data(allEmployees)
+		 		    .path(request.getRequestURI())
+		 		    .build(); 
+		return apiResponse;
 
 	}
 

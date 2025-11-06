@@ -1,4 +1,4 @@
-INSERT IGNORE INTO employees 
+INSERT INTO employees 
     (name, designation, salary, experience_years, performance_rating)
 VALUES
     ('Arjun Malhotra', 'Analyst', 95000.00, 6.0, 4),

@@ -1,15 +1,28 @@
 # Rewardly Employee Service - Local Development Profile
 # This profile is used for local development with enhanced debugging
 
+#default local profile is enabled
 spring:
   config:
     activate:
-      on-profile: local
+      on-profile: local			
 
+#url -> 
+#createDatabaseIfNotExist=true: auto-creates DB if missing.
+#useSSL=false: disables SSL for local use.
+#allowPublicKeyRetrieval=true: fixes connection issue for MySQL 8+.
+#serverTimezone=UTC: ensures consistent timestamps.
+#${DB_USERNAME:root} uses environment variable if set, else defaults to root.
   datasource:
     url: jdbc:mysql://localhost:3306/rewardly_employee_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
+#HikariCP Connection Pool
+#Keeps 5–10 connections ready.
+#Idle connections removed after 5 min.
+#Timeout 20 s if no connection available.
+#Connections refreshed every 30 min.
+#Logs warning if a connection stays open > 60 s (possible leak).
     hikari:
       pool-name: RewardlyHikariCP
       minimum-idle: 5
@@ -19,7 +32,11 @@ spring:
       max-lifetime: 1800000      # 30 minutes
       auto-commit: true
       leak-detection-threshold: 60000  # Warn if connection held > 60s
-
+#show-sql: logs generated SQL.
+#format_sql: pretty SQL.
+#use_sql_comments: adds comments in SQL logs.
+#highlight_sql: color output (supported terminals).
+#ddl-auto: update: updates schema automatically (good for local, unsafe for prod).
   jpa:
     show-sql: true
     properties:
@@ -33,8 +50,8 @@ spring:
   sql:
     init:
       mode: NEVER    # Avoid executing data.sql automatically in production
-#      mode: ALWAYS    Enable if you have data.sql for test data
-#			 platform: mysql Uncomment if using platform-specific scripts
+#mode: ALWAYS    Enable if you have data.sql for test data
+#platform: mysql Uncomment if using platform-specific scripts
 
 
 logging:
