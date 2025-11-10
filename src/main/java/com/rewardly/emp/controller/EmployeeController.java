@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 //import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,17 +20,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.rewardly.emp.employeedto.ApiResponse;
 import com.rewardly.emp.employeedto.EmployeeRequest;
 import com.rewardly.emp.employeedto.EmployeeResponse;
-import com.rewardly.emp.entity.Employee;
 import com.rewardly.emp.service.EmployeeService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 
 @RestController
 @RequestMapping("/api/v1/employees")
 @RequiredArgsConstructor
 @Slf4j
+@Validated  //added for validation check at the class level
 public class EmployeeController {
 //Manual Logging -alternative is @Slf4j
 //	private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
@@ -38,7 +41,7 @@ public class EmployeeController {
 	private final EmployeeService employeeService;
 
 	@PostMapping
-	public ResponseEntity<ApiResponse<EmployeeResponse>> createEmployee(@RequestBody EmployeeRequest employeeRequest, 
+	public ResponseEntity<ApiResponse<EmployeeResponse>> createEmployee(@Valid @RequestBody EmployeeRequest employeeRequest, 
 		HttpServletRequest request) {
 		log.info("Api Request: Creatin new employee with name: {}",employeeRequest.getEmpName());
 		EmployeeResponse employeeSaved = employeeService.createEmployee(employeeRequest);
@@ -91,15 +94,18 @@ public class EmployeeController {
 	}
 
 	@PutMapping("/{id}")
-	public Employee updateEmployee(@PathVariable String id, @RequestBody Employee employee) {
-		Employee updateEmployee = employeeService.updateEmployee(id, employee);
+	public EmployeeResponse updateEmployee(@PathVariable String id, @Valid @RequestBody EmployeeRequest employeeRequest) {
+		EmployeeResponse updateEmployee = employeeService.updateEmployee(id, employeeRequest);
 		return updateEmployee;
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteEmployee(@PathVariable String id) {
-		String message = employeeService.deleteEmployee(id);
-		return ResponseEntity.ok(message);
+	public ResponseEntity<Void> deleteEmployee(@PathVariable String id,HttpServletRequest request) {
+		log.info("Deleting employee with Id: {}",id);
+		log.info("Deleting the employee Path: {}",request.getRequestURI());
+		employeeService.deleteEmployee(id);
+		log.info("Employee successfully deleted with Id: {}",id);
+		return ResponseEntity.noContent().build();
 	}
 
 }
