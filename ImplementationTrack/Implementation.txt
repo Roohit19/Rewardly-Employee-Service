@@ -1,8 +1,11 @@
-=06-11-2025
+Date: 06-11-2025  |
+__________________|
 
 -Id type change to custom id style=rewardlyEmp-20251106-164405-8157
+
 -Added Log(@Slf4j)
 	-configuration changes for log
+	
 -Adding Exception
 	-BaseException class
 	-EmployeeNotFoundException
@@ -13,4 +16,32 @@
 -Service
 	-Exception throw
 	-@Transactional add
+__________________	
+Date: 07-11-2025  |
+(Discussed)       |
+__________________|
+-Service and Controller refinement
+-Implement JavaDoc
+-Swagger Implementation
+
+__________________	
+Date: 08-11-2025  |
+__________________|
+-Service and Controller refinement
+ -Controller
+ 	-@Validated  //@PathVariable @RequestParam
+ 	-@valid	     //@RequestBody
+ -Service
+ 
+-Implement JavaDoc
+-Swagger Implementation
+__________________
+Date: 10-11-2025  |
+__________________|
+-Service
+	-logs and javadoc implemented
+
+
 	
+
+
