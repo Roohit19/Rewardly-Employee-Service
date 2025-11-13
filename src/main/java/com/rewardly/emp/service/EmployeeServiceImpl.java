@@ -105,9 +105,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 * @return List of EmployeeResponse
 	 */
 	public List<EmployeeResponse> getAllEmployees() {
-		log.debug("Fetchin all employees");
+		log.debug("Fetching all employees");
 		List<Employee> allEmployees = employeeRepository.findAll();
-		log.info("Retrieved employees from database: {}", getAllEmployees().size());
+		log.info("Retrieved employees from database: {}", allEmployees.size());
 
 		List<EmployeeResponse> responseList = employeeMapper.toResponseList(allEmployees);
 
@@ -118,7 +118,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 * Updates an existing employee's record/information
 	 * 
 	 * @param id              -The employee id to update
-	 * @param EmployeeRequest - The employee data to be updated
+	 * @param employeeRequest - The employee data to be updated
 	 * @return EmployeeResponse - Containing the updated employee details
 	 * @throws EmployeeNotFoundException -If employee with specific Id is not present in DB
 	 * 

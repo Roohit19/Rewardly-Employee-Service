@@ -22,6 +22,7 @@ import com.rewardly.emp.employeedto.EmployeeRequest;
 import com.rewardly.emp.employeedto.EmployeeResponse;
 import com.rewardly.emp.service.EmployeeService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 @Validated  //added for validation check at the class level
+//@Tag(name = "Rewardly Employee Service", description = "API for employee CRUD operations")
 public class EmployeeController {
 //Manual Logging -alternative is @Slf4j
 //	private static final Logger logger = LoggerFactory.getLogger(EmployeeController.class);
@@ -80,7 +82,7 @@ public class EmployeeController {
 	}
 
 	@GetMapping
-	public ApiResponse<List<EmployeeResponse>> getAllEmployees(HttpServletRequest request) {
+	public ResponseEntity<ApiResponse<List<EmployeeResponse>>> getAllEmployees(HttpServletRequest request) {
 		 List<EmployeeResponse> allEmployees = employeeService.getAllEmployees();
 		 ApiResponse<List<EmployeeResponse>> apiResponse = ApiResponse.<List<EmployeeResponse>>builder()
 		 		    .success(true)
@@ -89,7 +91,7 @@ public class EmployeeController {
 		 		    .data(allEmployees)
 		 		    .path(request.getRequestURI())
 		 		    .build(); 
-		return apiResponse;
+		return ResponseEntity.ok(apiResponse);
 
 	}
 
