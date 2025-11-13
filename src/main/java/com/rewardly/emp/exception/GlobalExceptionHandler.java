@@ -1,7 +1,12 @@
 package com.rewardly.emp.exception;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -26,6 +31,32 @@ public class GlobalExceptionHandler {
 	private String getRequestPath(WebRequest request){
 		return request.getDescription(false).replace("uri=", "");
 	}
-
+	/**
+	 * Handles validation errors for @Valid annotated request bodies
+	 */
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<ErrorResponse> handleValidationException(
+			MethodArgumentNotValidException ex, 
+			WebRequest request) {
+		
+		Map<String, String> errors = new HashMap<>();
+		
+		// Extract all field errors
+		ex.getBindingResult().getAllErrors().forEach(error -> {
+			String fieldName = ((FieldError) error).getField();
+			String errorMessage = error.getDefaultMessage();
+			errors.put(fieldName, errorMessage);
+		});
+		
+		ErrorResponse errorResponse = ErrorResponse.builder()
+				.success(false)
+				.status(HttpStatus.BAD_REQUEST.value())
+				.errorMessage("Validation failed")
+				.errors(errors)
+				.path(getRequestPath(request))
+				.build();
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+	}
 	
 }

@@ -40,6 +40,33 @@ Date: 10-11-2025  |
 __________________|
 -Service
 	-logs and javadoc implemented
+	
+__________________
+Date: 11-11-2025  |
+__________________|
+-Make changes in service and update logs to avoid 
+	StackOverFlowException
+-Also updated Controller for proper response
+
+__________________
+Date: 12-11-2025  |
+__________________|
+-Discussion of overall implementation
+-Future planning of adding Authentication service
+
+__________________
+Date: 13-11-2025  |
+__________________|
+-Added swagger configuration also enable enviroment variable to true
+	- ${SWAGGER_ENABLED:false} 
+	- (set SWAGGER_ENABLED = true environment variable separately for build and run)
+-Implementation of swagger annotation in controller class
+	-SwaggerConfig
+	-In future we can centralize this config in ConfigServer
+	
+	
+	-need to handle java.util.MissingFormatArgumentException exception
+	-need to handle empId exception in swagger
 
 
 	

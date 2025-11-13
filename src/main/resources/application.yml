@@ -33,11 +33,27 @@ spring:
   sql:
     init:
       mode: never  # Avoid executing data.sql automatically in production
-#     mode: always → use only in dev/test profiles to pre-populate sample data
-
+      # mode: always → use only in dev/test profiles to pre-populate sample data
 
 logging:
   level:
     '[org.springframework]': info
     '[org.hibernate.SQL]': warn
     '[org.hibernate.type.descriptor.sql.BasicBinder]': off
+
+# -------------------------
+# Swagger / OpenAPI Configuration
+# -------------------------
+
+springdoc:
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:false}  # Disabled by default in prod
+    path: /swagger-ui.html
+    try-it-out-enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:false}
+    path: /v3/api-docs
+
