@@ -67,8 +67,14 @@ __________________|
 	
 	-need to handle java.util.MissingFormatArgumentException exception
 	-need to handle empId exception in swagger
-
-
-	
+__________________
+Date: 14-11-2025  |
+__________________|
+- Updated the @GetMapping("/{id}") controller endpoint
+	- Added comprehensive Swagger documentation
+		- @Operation
+		- @ApiResponses
+- Committed the changes to the feature/swagger-implementation branch to verify whether 
+team members can also commit to the same branch where earlier commit was done.
 
 
