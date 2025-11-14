@@ -138,6 +138,87 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/{id}")
+	@Operation(	summary = "Featch employee by ID",
+				description = "Fetch complete employee record by employee id"				
+			)
+	@ApiResponses(value = {
+		    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+		        responseCode = "200",
+		        description = "Employee retrieved successfully",
+		        content = @Content(
+		            mediaType = "application/json",
+		            schema = @Schema(implementation = ApiResponse.class),
+		            examples = @ExampleObject(
+		                name = "Success Response",
+		                value = """
+		                {
+		                    "success": true,
+		                    "statusCode": 200,
+		                    "message": "Employee retrieved successfully",
+		                    "data": {
+		                        "empId": "rewardlyEmp-20251106-164405-8157",
+		                        "empName": "Rohit Sharma",
+		                        "empDepartment": "Engineering",
+		                        "empDesignation": "Senior Developer",
+		                        "empPerformanceRating": "5"
+		                    },
+		                    "path": "/api/v1/employees/rewardlyEmp-20251106-164405-8157",
+		                    "timestamp": "2025-11-13T10:30:00"
+		                }
+		                """
+		            )
+		        )
+		    ),
+			/*
+			 * @io.swagger.v3.oas.annotations.responses.ApiResponse( responseCode = "400",
+			 * description = "Invalid employee ID", content = @Content( mediaType =
+			 * "application/json", schema = @Schema(implementation = ApiResponse.class),
+			 * examples = @ExampleObject( name = "Invalid ID", value = """ { "success":
+			 * false, "statusCode": 400, "message": "Invalid employee ID format", "path":
+			 * "/api/v1/employees/rewardly-20251106-164405-8157", "timestamp":
+			 * "2025-11-13T10:30:00" } """ ) ) ),
+			 */
+		    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+		        responseCode = "404",
+		        description = "Employee not found",
+		        content = @Content(
+		            mediaType = "application/json",
+		            schema = @Schema(implementation = ApiResponse.class),
+		            examples = @ExampleObject(
+		                name = "Not Found Error",
+		                value = """
+		                {
+		                    "success": false,
+		                    "statusCode": 404,
+		                    "message": "Employee with ID: rewardlyEmp-20251106-164405-8157 not found",
+		                    "path": "/api/v1/employees/rewardlyEmp-20251106-164405-8157",
+		                    "timestamp": "2025-11-13T10:30:00"
+		                }
+		                """
+		            )
+		        )
+		    ),
+		    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+		        responseCode = "500",
+		        description = "Internal server error",
+		        content = @Content(
+		            mediaType = "application/json",
+		            schema = @Schema(implementation = ApiResponse.class),
+		            examples = @ExampleObject(
+		                name = "Server Error",
+		                value = """
+		                {
+		                    "success": false,
+		                    "statusCode": 500,
+		                    "message": "An unexpected error occurred while retrieving employee",
+		                    "path": "/api/v1/employees/rewardlyEmp-20251106-164405-8157",
+		                    "timestamp": "2025-11-13T10:30:00"
+		                }
+		                """
+		            )
+		        )
+		    )
+		})
 	public ResponseEntity<ApiResponse<EmployeeResponse>> getEmployee(@PathVariable String id,
 			HttpServletRequest request) {
 		EmployeeResponse employeeResponse = employeeService.getEmployee(id);
