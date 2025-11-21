@@ -64,7 +64,7 @@ public class EmployeeController {
 					    "timestamp": "2025-11-13T10:30:00"
 					}
 					"""))),
-			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input data - Validation failed", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ApiResponse.class), examples = {
+			@io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid input data - Validation failed", content = @Content(mediaType = "application/json", schema = @Schema(implementation =ApiResponse.class), examples = {
 					@ExampleObject(name = "Validation Error - Name and Email", summary = "Missing required fields", value = """
 							{
 							    "success": false,
@@ -120,7 +120,7 @@ public class EmployeeController {
 						 }
 					"""))) @Valid @RequestBody EmployeeRequest employeeRequest,
 			HttpServletRequest request) {
-		log.info("Api Request: Creatin new employee with name: {}", employeeRequest.getEmpName());
+		log.info("Api Request: Creating new employee with name: {}", employeeRequest.getEmpName());
 		EmployeeResponse employeeSaved = employeeService.createEmployee(employeeRequest);
 		ApiResponse<EmployeeResponse> apiResponse = ApiResponse.<EmployeeResponse>builder().success(true)
 				.statusCode(HttpStatus.CREATED.value()).message("Employee created successfully").data(employeeSaved)

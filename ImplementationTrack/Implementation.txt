@@ -77,4 +77,18 @@ __________________|
 - Committed the changes to the feature/swagger-implementation branch to verify whether 
 team members can also commit to the same branch where earlier commit was done.
 
+__________________
+Date: 21-11-2025  |
+__________________|
+-Validation errors throw after adding @pattern id and handle it in globalexception
+-getEmployees(), getAllEmployees()
+-updateEmployee(), and deleteEmployee()  we need to add swagger annotation with proper error handling
+and expected responses
+
+===========
+-Need to add swagger annotations to dtos
+-And implement testing (unit testing and integration testing)
+
+ 
+
 
