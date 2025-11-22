@@ -92,7 +92,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		Employee employee = employeeRepository.findById(id).orElseThrow(() -> {
 			log.error("Employee not found: {}", id);
-			return new EmployeeNotFoundException("Employee not found from get method");
+			return new EmployeeNotFoundException(id);
 		});
 		log.info("Successfully retrieve employee record with name: {} and Id: {}", employee.getEmpName(),
 				employee.getEmpId());

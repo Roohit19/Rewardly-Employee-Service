@@ -1,11 +1,10 @@
-package com.rewardly;
+package com.rewardly.emp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.rewardly.emp.RewardlyEmployeeServiceApplication;
 
-@SpringBootTest(classes = RewardlyEmployeeServiceApplication.class)
+@SpringBootTest
 class RewardlyEmployeeServiceApplicationTests {
 
 	@Test
