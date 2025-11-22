@@ -65,7 +65,7 @@ timestamp	String	ISO 8601 timestamp of the response
 @AllArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResponse <T> {
+public class EmployeeApiResponse <T> {
 	
 	private boolean success;
 	private T data;
