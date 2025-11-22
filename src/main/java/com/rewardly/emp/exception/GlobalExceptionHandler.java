@@ -59,4 +59,38 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
 	}
 	
+	
+	//500
+	@ExceptionHandler(GenricException.class)
+	public ResponseEntity<ErrorResponse> handleGenricException(GenricException ex, WebRequest request){
+		ErrorResponse errorResponse = ErrorResponse
+											.builder()
+											.success(false)
+											.status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+											.errorCode(ex.getErrorCode())
+											.errorMessage(ex.getMessage())
+											.errors(null)
+											.path(getRequestPath(request))
+											.build();
+		
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+	}
+	
+	
+	@ExceptionHandler(BadRequestException.class)
+	public ResponseEntity<ErrorResponse> handleBadRequestException(
+	        BadRequestException ex, WebRequest request) {
+
+	    ErrorResponse errorResponse = ErrorResponse.builder()
+	            .success(false)
+	            .status(HttpStatus.BAD_REQUEST.value())
+	            .errorCode(ex.getErrorCode())
+	            .errorMessage(ex.getMessage())
+	            .path(getRequestPath(request))
+	            .build();
+
+	    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+	}
+
+	
 }

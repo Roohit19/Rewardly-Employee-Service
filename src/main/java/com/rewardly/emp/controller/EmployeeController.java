@@ -175,15 +175,15 @@ public class EmployeeController {
 		            )
 		        )
 		    ),
-			/*
-			 * @io.swagger.v3.oas.annotations.responses.ApiResponse( responseCode = "400",
-			 * description = "Invalid employee ID", content = @Content( mediaType =
-			 * "application/json", schema = @Schema(implementation = ApiResponse.class),
-			 * examples = @ExampleObject( name = "Invalid ID", value = """ { "success":
-			 * false, "statusCode": 400, "message": "Invalid employee ID format", "path":
-			 * "/api/v1/employees/rewardly-20251106-164405-8157", "timestamp":
-			 * "2025-11-13T10:30:00" } """ ) ) ),
-			 */
+			
+//			@io.swagger.v3.oas.annotations.responses.ApiResponse( responseCode = "400",
+//			 description = "Invalid employee ID", content = @Content( mediaType =
+//			 "application/json", schema = @Schema(implementation = ApiResponse.class),
+//			 examples = @ExampleObject( name = "Invalid ID", value = """ { "success":
+//			 false, "statusCode": 400, "message": "Invalid employee ID format", "path":
+//			 "/api/v1/employees/rewardly-20251106-164405-8157", "timestamp":
+//			 "2025-11-13T10:30:00" } """ ) ) ),
+			 
 		    @io.swagger.v3.oas.annotations.responses.ApiResponse(
 		        responseCode = "404",
 		        description = "Employee not found",
