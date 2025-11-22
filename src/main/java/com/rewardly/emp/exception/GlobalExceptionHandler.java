@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -90,6 +91,19 @@ public class GlobalExceptionHandler {
 	            .build();
 
 	    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+	}
+	
+	@ExceptionHandler(CannotCreateTransactionException.class)
+	public ResponseEntity<ErrorResponse> handleCannotCreateTransactionException(CannotCreateTransactionException ex,
+			WebRequest request){
+		ErrorResponse errorResponse = ErrorResponse.builder()
+		.success(false)
+		.status(HttpStatus.SERVICE_UNAVAILABLE.value())
+		.errorCode("DB_CONNECTION_ERROR")
+		.errorMessage("Database connection error. Please try again later")
+		.path(getRequestPath(request))
+		.build();
+		return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(errorResponse);
 	}
 
 	

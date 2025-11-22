@@ -39,7 +39,7 @@ public class EmployeeRequest {
 	
 	@Min(value=1,message="Performance rating must be at least 1")
 	@Max(value=5,message="Performance rating must be up to 5")
-	private int empPerformanceRating;
+	private Integer empPerformanceRating;
 	
 
 }

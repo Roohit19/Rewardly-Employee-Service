@@ -225,7 +225,8 @@ public class EmployeeController {
 		        )
 		    )
 		})
-	public ResponseEntity<EmployeeApiResponse<EmployeeResponse>> getEmployee(@PathVariable String id,
+	public ResponseEntity<EmployeeApiResponse<EmployeeResponse>> getEmployee(@PathVariable 
+			String id,
 			HttpServletRequest request) {
 		EmployeeResponse employeeResponse = employeeService.getEmployee(id);
 		EmployeeApiResponse<EmployeeResponse> apiResponse = EmployeeApiResponse.<EmployeeResponse>builder().success(true)
