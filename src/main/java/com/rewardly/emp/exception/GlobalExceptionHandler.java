@@ -53,6 +53,7 @@ public class GlobalExceptionHandler {
 				.success(false)
 				.status(HttpStatus.BAD_REQUEST.value())
 				.errorMessage("Validation failed")
+				.errorCode("BAD_REQUEST")
 				.errors(errors)
 				.path(getRequestPath(request))
 				.build();

@@ -2,6 +2,8 @@ package com.rewardly.emp.employeedto;
 
 import java.math.BigDecimal;
 
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -33,8 +35,8 @@ public class EmployeeRequest {
 	@PositiveOrZero(message="salary must be positive")
 	private BigDecimal empSalary;
 	
-	@Min(value=1,message="Performance rating must be at least 1")
-	@Max(value=5,message="Performance rating must be up to 5")
+	@DecimalMin(value="1.0", message="Experience years must be at least 1")
+	@DecimalMax(value="50.0", message="Experience years must be up to 50")
 	private  BigDecimal empExperienceYears;
 	
 	@Min(value=1,message="Performance rating must be at least 1")
