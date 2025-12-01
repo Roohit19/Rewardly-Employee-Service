@@ -132,7 +132,7 @@ public class EmployeeController {
 				.statusCode(HttpStatus.CREATED.value()).message("Employee created successfully").data(employeeSaved)
 				.path(request.getRequestURI()).build();
 		log.info("Api Response: Successfully created employee with ID: {}", employeeSaved.getEmpId());
-
+		
 		return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
 
 		// return ResponseEntity.ok();
@@ -556,6 +556,7 @@ public class EmployeeController {
 		EmployeeResponse updatedEmployee = employeeService.updateEmployee(id, employeeRequest);
 		EmployeeApiResponse<EmployeeResponse> employeeResponse = EmployeeApiResponse.<EmployeeResponse>builder()
 		.success(true)
+		.statusCode(HttpStatus.OK.value())
 		.data(updatedEmployee)
 		.message("Employee updated successfully")
 		.path(request.getRequestURI())

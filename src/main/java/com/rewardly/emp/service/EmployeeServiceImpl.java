@@ -76,6 +76,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 		Employee savedEmployee = employeeRepository.save(employee);
 		// return savedEmployee;
 		log.info("Employee saved Id:{}", employee.getEmpId());
+		
+		// for test fail check
+		//this.getEmployee(employee.getEmpId());
+		
 		return employeeMapper.toResponse(savedEmployee);
 
 	}
