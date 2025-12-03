@@ -267,9 +267,7 @@ class EmployeeControllerTest {
 		            .andExpect(jsonPath("$.path").value("/api/v1/employees/" + validEmpId));
 		
 		//Verify
-		verify(employeeService).updateEmployee(validEmpId, employeeRequest);
-		
-		
+		verify(employeeService).updateEmployee(validEmpId, employeeRequest);		
 		
 	}
 	/**
