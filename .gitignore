@@ -93,7 +93,14 @@ src/main/resources/application-local.yml
 # =========================
 # Logs and OS Files
 # =========================
+# (ADDED)
+logs/
 *.log
+*.gz
+
+# (ADDED)
+.dbeaver/
+
 *.tmp
 *.swp
 .DS_Store
