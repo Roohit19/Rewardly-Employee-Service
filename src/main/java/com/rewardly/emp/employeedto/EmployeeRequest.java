@@ -35,7 +35,7 @@ public class EmployeeRequest {
 	@PositiveOrZero(message="salary must be positive")
 	private BigDecimal empSalary;
 	
-	@DecimalMin(value="1.0", message="Experience years must be at least 1")
+	@DecimalMin(value="1.0", message="Experience years must be at least 0")
 	@DecimalMax(value="50.0", message="Experience years must be up to 50")
 	private  BigDecimal empExperienceYears;
 	

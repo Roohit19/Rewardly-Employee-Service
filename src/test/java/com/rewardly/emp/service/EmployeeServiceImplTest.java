@@ -3,16 +3,23 @@ package com.rewardly.emp.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -21,6 +28,7 @@ import com.rewardly.emp.employeedto.EmployeeRequest;
 import com.rewardly.emp.employeedto.EmployeeResponse;
 import com.rewardly.emp.entity.Employee;
 import com.rewardly.emp.exception.EmployeeNotFoundException;
+import com.rewardly.emp.exception.InvalidEmployeeDataException;
 import com.rewardly.emp.mapper.EmployeeMapper;
 import com.rewardly.emp.repository.EmployeeRepository;
 
@@ -95,6 +103,8 @@ class EmployeeServiceImplTest {
 							.build();		
 	}
 	
+	/*Create*/
+	
 	@DisplayName("Creating employee with valid data")
 	@Test
 	void testCreateEmployee() {
@@ -123,6 +133,116 @@ class EmployeeServiceImplTest {
 		verify(employeeMapper, times(1)).toResponse(savedEmployee);
 				
 	}
+	
+	@DisplayName("Test valid Employee ID")
+	@Test
+	void shouldGenerateValidEmployeeId() {
+		
+		when(employeeMapper.toEntity(employeeRequest)).thenReturn(employee);
+		when(employeeRepository.save(employee)).thenReturn(savedEmployee);
+		when(employeeMapper.toResponse(savedEmployee)).thenReturn(employeeResponse);
+		
+		@SuppressWarnings("unused")
+		EmployeeResponse employeeResult = employeeService.createEmployee(employeeRequest);
+		
+		
+		//After request and before saving to the DB 
+		ArgumentCaptor<Employee> captor = ArgumentCaptor.forClass(Employee.class);
+		verify(employeeRepository).save(captor.capture());
+		
+		//
+		 Employee empPassed = captor.getValue();
+		 String empId = empPassed.getEmpId();
+		 
+		 assertNotNull(empId, "Generated employee ID should not be null");
+		 assertFalse(empId.isBlank(), "Generated employee ID should not be blank");
+		 assertEquals(employeeRequest.getEmpName(), empPassed.getEmpName());
+		 
+		 String regex = "^rewardlyEmp-\\d{8}-\\d{6}-\\d{4}$";
+		 assertTrue(empId.matches(regex),
+				 	"Generated ID should match the format rewardlyEmp-YYYYMMDD-HHMMSS-XXXX, but was: " 
+				 	+ empId);		
+	}
+	
+	@DisplayName("Invalid employee data exception ->  exp > 50")
+	@Test
+	void createEmployee_ExperienceExceeds50() {
+		
+		employeeRequest.setEmpExperienceYears(new BigDecimal("51.0"));
+		
+		
+		when(employeeMapper.toEntity(employeeRequest)).thenReturn(employee);
+		
+		InvalidEmployeeDataException exception = assertThrows(InvalidEmployeeDataException.class, 
+				() -> employeeService.createEmployee(employeeRequest));
+		
+		System.out.println("Exception -> "+ exception.getMessage());
+		assertTrue(exception.getMessage().contains("experience must be less than 50"));
+		
+		verify(employeeRepository , never()).save(any(Employee.class));
+		
+	}
+	
+	
+//	@DisplayName("Invalid employee data exception ->  exp < 0")
+//	@Test
+//	void createEmployee_ExperienceNegative() {
+//		
+//		employeeRequest.setEmpExperienceYears(new BigDecimal("0.0"));
+//		
+//		
+//		when(employeeMapper.toEntity(employeeRequest)).thenReturn(employee);
+//		
+//		InvalidEmployeeDataException exception = assertThrows(InvalidEmployeeDataException.class, 
+//				() -> employeeService.createEmployee(employeeRequest));
+//		
+//		System.out.println("Exception -> "+ exception.getMessage());
+//		//assertTrue(exception.getMessage().contains("experience must be less than 50"));
+//		//verify(employeeRepository , never()).save(any(Employee.class));
+//		
+//	}
+	
+	
+	@DisplayName("Invalid employee data exception ->  performanceRating < 1")
+	@Test
+	void createEmployee_PerformanceRatingLessThan1() {
+		
+		employeeRequest.setEmpPerformanceRating(0);
+		
+		when(employeeMapper.toEntity(employeeRequest)).thenReturn(employee);
+		
+		InvalidEmployeeDataException exception = assertThrows(InvalidEmployeeDataException.class, 
+				() -> employeeService.createEmployee(employeeRequest));
+		
+		System.out.println("Exception -> "+ exception.getMessage());
+		assertTrue(exception.getMessage().contains("Performance rating must be between 1 and 5"));
+		
+		verify(employeeRepository , never()).save(any(Employee.class));
+		
+	}
+	
+	
+	@DisplayName("Invalid employee data exception ->  performanceRating > 5")
+	@Test
+	void createEmployee_PerformanceRatingGreaterThan5() {
+		
+		employeeRequest.setEmpPerformanceRating(6);
+		
+		when(employeeMapper.toEntity(employeeRequest)).thenReturn(employee);
+		
+		InvalidEmployeeDataException exception = assertThrows(InvalidEmployeeDataException.class, 
+				() -> employeeService.createEmployee(employeeRequest));
+		
+		System.out.println("Exception -> "+ exception.getMessage());
+		assertTrue(exception.getMessage().contains("Performance rating must be between 1 and 5"));
+		
+		verify(employeeRepository , never()).save(any(Employee.class));
+		
+	}
+	
+	
+	/*Get*/
+	
 
 	@DisplayName("Get employee by ID")
 	@Test
@@ -161,31 +281,82 @@ class EmployeeServiceImplTest {
 		
 	}
 	
-	
-	@DisplayName("")
+	@DisplayName("Get all employee records successfully")
 	@Test
-	shouldGenerateValidEmployeeId
+	void testGetAllEmployees_success() {
+		
+		EmployeeResponse empRes = EmployeeResponse
+								.builder()
+								.empId("rewardlyEmp-20251118-190420-9481")
+								.empName("Rohit Sharma")
+								.empDesignation("Java Developer")
+								.empSalary(new BigDecimal("500000.00"))
+								.empExperienceYears(new BigDecimal("6.0"))
+								.empPerformanceRating(5)
+								.build();
+		
+		Employee emp = Employee
+								.builder()
+								.empId("rewardlyEmp-20251118-190420-9481")
+								.empName("Rohit Sharma")
+								.empDesignation("Java Developer")
+								.empSalary(new BigDecimal("500000.00"))
+								.empExperienceYears(new BigDecimal("6.0"))
+								.empPerformanceRating(5)
+								.build();
+		
+		List<EmployeeResponse> empResList = Arrays.asList(employeeResponse,empRes);
+		List<Employee> empList = Arrays.asList(employee,emp);
+			
+		when(employeeRepository.findAll()).thenReturn(empList);
+		when(employeeMapper.toResponseList(empList)).thenReturn(empResList);
+		
+		List<EmployeeResponse> result = employeeService.getAllEmployees();
+		
+		assertNotNull(result);
+		
+		assertEquals(2, result.size());
+		
+		assertEquals("rewardlyEmp-20251118-190420-9480", result.get(0).getEmpId());
+		assertEquals("rewardlyEmp-20251118-190420-9481", result.get(1).getEmpId());
+		
+		verify(employeeRepository, times(1)).findAll();
+		verify(employeeMapper, times(1)).toResponseList(empList);
+			
+	}
+	
+	@DisplayName("Returns empty list")
+	@Test
+	void getAllEmployee_EmptyList() {
+		
+		when(employeeRepository.findAll()).thenReturn(Arrays.asList());
+		when(employeeMapper.toResponseList(anyList())).thenReturn(Arrays.asList());
+		
+		List<EmployeeResponse> result = employeeService.getAllEmployees();
+		
+		assertNotNull(result);
+		assertTrue(result.isEmpty());
+		
+		verify(employeeRepository, times(1)).findAll();
+		verify(employeeMapper, times(1)).toResponseList(Arrays.asList());	
+		
+	}
 	
 	
+	
+	//Wasim
+	@Test
+	void testUpdateEmployee() {
+		
+		
+	}
 
-//	@Test
-//	void testGetAllEmployees() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testUpdateEmployee() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testDeleteEmployee() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	void testEmployeeServiceImpl() {
-//		fail("Not yet implemented");
-//	}
+	//Amol
+	@Test
+	void testDeleteEmployee() {
+		fail("Not yet implemented");
+	}
+	
+	
 
 }

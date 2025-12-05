@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -85,6 +86,7 @@ public class Employee {
 	private BigDecimal empSalary;
 
 	@PositiveOrZero(message="Experience must be positive")
+	@DecimalMax(value="50.0", message="Experience years must be up to 50")
 	@Column(nullable = false, name = "experience_years",precision=3,scale=1)
 	private  BigDecimal empExperienceYears;
 
