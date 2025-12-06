@@ -3,7 +3,6 @@ package com.rewardly.emp.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -32,7 +32,6 @@ import com.rewardly.emp.exception.InvalidEmployeeDataException;
 import com.rewardly.emp.mapper.EmployeeMapper;
 import com.rewardly.emp.repository.EmployeeRepository;
 
-import jakarta.inject.Inject;
 
 //Annotate EmployeeServiceImplTest
 //Controller call
@@ -344,19 +343,57 @@ class EmployeeServiceImplTest {
 	
 	
 	
-	//Wasim
-	@Test
-	void testUpdateEmployee() {
-		
-		
-	}
+//	//Wasim
+//	@Test
+//	void testUpdateEmployee() {
+//		
+//		
+//	}
 
 	//Amol
+	/* Delete test cases*/
+	@DisplayName("Delete success case")
 	@Test
 	void testDeleteEmployee() {
-		fail("Not yet implemented");
+		
+		//Calling the findById()
+		when(employeeRepository.findById(validEmpId)).thenReturn(Optional.of(employee));
+		
+		//Delete is void so doNothing()
+		doNothing().when(employeeRepository).delete(employee);
+		
+		//call service method
+		employeeService.deleteEmployee(validEmpId);
+		
+		verify(employeeRepository, times(1)).findById(validEmpId);
+		verify(employeeRepository, times(1)).delete(employee);						
 	}
 	
+	
+	@DisplayName("Delete employee: should throw when ID not found")
+	@Test
+	void testDeleteEmployee_NotFound() {
+		
+		//Calling the findById() -> empty object
+		
+		when(employeeRepository.findById(invalidId)).thenReturn(Optional.empty());
+		
+		//throwError
+		
+		EmployeeNotFoundException excption = assertThrows(EmployeeNotFoundException.class, 
+					() -> employeeService.deleteEmployee(invalidId) );
+		
+		//verify message 
+		
+		assertEquals("Employee not found with ID: "+invalidId ,excption.getMessage());
+		
+		//System.out.println(excption.getMessage());
+		
+		//Verify number of hits
+		
+		verify(employeeRepository, times(1)).findById(invalidId);
+		verify(employeeRepository, never()).delete(any());		
+	}
 	
 
 }
