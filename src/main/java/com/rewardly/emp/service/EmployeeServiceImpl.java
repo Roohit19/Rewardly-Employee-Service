@@ -49,6 +49,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 * 
 	 */
 	@Transactional
+	@Override
 	public EmployeeResponse createEmployee(EmployeeRequest employeeRequest) {
 		// Logic to save employee to the database
 		log.debug("Creating employee with name: {}", employeeRequest.getEmpName());
@@ -91,6 +92,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 * @return EmployeeResponse -Containing the employee details
 	 * @throws EmployeeNotFoundException -if employee not found
 	 */
+	@Override
 	public EmployeeResponse getEmployee(String id) {
 		log.debug("Fetching employee with id: {}", id);
 
@@ -108,6 +110,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 * 
 	 * @return List of EmployeeResponse
 	 */
+	@Override
 	public List<EmployeeResponse> getAllEmployees() {
 		log.debug("Fetching all employees");
 		List<Employee> allEmployees = employeeRepository.findAll();
@@ -128,6 +131,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 * 
 	 */
 	@Transactional
+	@Override
 	public EmployeeResponse updateEmployee(String id, EmployeeRequest employeeRequest) {
 		log.debug("Updating employee with Id: {}", id);
 		Employee existingEmployee = employeeRepository.findById(id).orElseThrow(() -> {
@@ -164,11 +168,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 	 * @param id -the employee id to delete
 	 * @throws EmployeeNotFoundException -if employee not Found
 	 */
+	@Override
 	public void deleteEmployee(String id) {
 		Employee existingEmployee = employeeRepository.findById(id).orElseThrow(()->{
 		log.error("Employee not found with Id: {} and name: {}",id);
-		return new EmployeeNotFoundException(
-				String.format("Employee not found with Id: %s and name: %s",id));
+		return new EmployeeNotFoundException( id);
+				//String.format("Employee not found with Id: %s ",id));
+				
 				});
 		log.info("Employee found with name: {}", existingEmployee.getEmpName());
 	
