@@ -19,7 +19,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -346,7 +349,82 @@ class EmployeeServiceImplTest {
 	
 	//Wasim
 	@Test
-	void testUpdateEmployee() {
+	@DisplayName("Should update employee successfully")
+	void testUpdateEmployee_success() {
+		//Arrange
+		EmployeeRequest updateRequest=new EmployeeRequest();
+		updateRequest.setEmpName("Sachin Reddy");
+		updateRequest.setEmpDesignation("Senior Software Engineer");
+		updateRequest.setEmpSalary(new BigDecimal("90000.00"));
+		updateRequest.setEmpExperienceYears(new BigDecimal("6.0"));
+		updateRequest.setEmpPerformanceRating(5);
+		
+		when(employeeRepository.findById(validEmpId)).thenReturn(Optional.of(employee));
+
+		//		doNothing().when(employeeMapper).updateEntityFromRequest(updateRequest, employee);
+
+		//Print when Mapper updates entity(like doPrint())
+		
+		doAnswer(invocation->{
+			EmployeeRequest requestPrint=invocation.getArgument(0);
+			Employee employeePrint=invocation.getArgument(1);
+			System.out.println("Update Mapper called");
+			System.out.println("Update Request: "+requestPrint);
+			System.out.println("Employee Before update: "+employeePrint);
+			
+		      // --- simulate mapper behaviour ---
+			employeePrint.setEmpName(requestPrint.getEmpName());
+			employeePrint.setEmpDesignation(requestPrint.getEmpDesignation());
+			employeePrint.setEmpSalary(requestPrint.getEmpSalary());
+			employeePrint.setEmpExperienceYears(requestPrint.getEmpExperienceYears());
+			employeePrint.setEmpPerformanceRating(requestPrint.getEmpPerformanceRating());
+
+	        System.out.println("Employee AFTER update: " + employeePrint);
+	        
+			return null;
+		}).when(employeeMapper).updateEntityFromRequest(updateRequest, employee);
+		
+		//		when(employeeRepository.save(employee)).thenReturn(employee);
+		// Print when repository saves employee
+		when(employeeRepository.save(employee)).thenAnswer(invocation->{
+			Employee savedEmployeePrint=invocation.getArgument(0);
+			System.out.println("Repository save called");
+			System.out.println("Employee being saved: "+savedEmployeePrint);
+			return savedEmployeePrint;
+		});
+		
+		 // Build response from the saved employee argument
+	    when(employeeMapper.toResponse(any(Employee.class))).thenAnswer(invocation -> {
+	        Employee emp = invocation.getArgument(0);
+	        EmployeeResponse resp = new EmployeeResponse();
+	        resp.setEmpId(emp.getEmpId());
+	        resp.setEmpName(emp.getEmpName());
+	        resp.setEmpDesignation(emp.getEmpDesignation());
+	        resp.setEmpSalary(emp.getEmpSalary());
+	        resp.setEmpExperienceYears(emp.getEmpExperienceYears());
+	        resp.setEmpPerformanceRating(emp.getEmpPerformanceRating());
+	        return resp;
+	    });
+		
+		//Act
+		EmployeeResponse updateEmployeeResult = employeeService.updateEmployee(validEmpId, updateRequest);
+		
+		//Print final response
+		System.out.println("Final service response");
+		System.out.println("Employee Response: "+updateEmployeeResult);
+		
+		// Assert
+	    assertNotNull(updateEmployeeResult);
+	    assertEquals("Sachin Reddy", updateEmployeeResult.getEmpName());
+	    assertEquals("Senior Software Engineer", updateEmployeeResult.getEmpDesignation());
+	    assertEquals(new BigDecimal("90000.00"), updateEmployeeResult.getEmpSalary());
+	    assertEquals(new BigDecimal("6.0"), updateEmployeeResult.getEmpExperienceYears());
+
+	    verify(employeeRepository, times(1)).findById(validEmpId);
+	    verify(employeeMapper, times(1)).updateEntityFromRequest(any(EmployeeRequest.class), any(Employee.class));
+	    verify(employeeRepository, times(1)).save(any(Employee.class));
+	    verify(employeeMapper, times(1)).toResponse(any(Employee.class));
+		
 		
 		
 	}
