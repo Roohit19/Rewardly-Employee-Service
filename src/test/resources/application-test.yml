@@ -1,0 +1,23 @@
+# Rewardly Employee Service - Test Development Profile
+# This profile is used for Test development with enhanced debugging
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop     # schema resets for every test run
+    show-sql: true              # show SQL in console
+    properties:
+      hibernate:
+        format_sql: true        # format SQL in console
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
