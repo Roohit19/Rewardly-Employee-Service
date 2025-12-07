@@ -425,6 +425,23 @@ class EmployeeServiceImplTest {
 		
 		
 	}
+	
+	@Test
+	@DisplayName("Should throw EmployeeNotFoundException when updating non-existent employee")
+	void testUpdateEmployee_NotFound() {
+		//Arrange
+		when(employeeRepository.findById(invalidId)).thenReturn(Optional.empty());
+		
+		//Act
+		EmployeeNotFoundException exception = assertThrows(EmployeeNotFoundException.class, ()-> employeeService.updateEmployee(invalidId, employeeRequest));
+		
+		//Assert
+		assertTrue(exception.getMessage().contains(invalidId));
+		verify(employeeRepository,times(1)).findById(invalidId);
+		verify(employeeRepository,never()).save(any());
+		
+		
+	}
 
 	//Amol
 	/* Delete test cases*/

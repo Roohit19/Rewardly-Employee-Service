@@ -2,8 +2,7 @@ package com.rewardly.emp.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -27,11 +26,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+
+
+import static org.hamcrest.Matchers.hasSize;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rewardly.emp.employeedto.EmployeeRequest;
-import com.rewardly.emp.employeedto.EmployeeResponse;
 import com.rewardly.emp.entity.Employee;
 import com.rewardly.emp.repository.EmployeeRepository;
 
@@ -66,7 +67,6 @@ public class EmployeeControllerIntegrationTest {
 	@DisplayName("Should create employee successfully and return 201 with full response body")
 	@Test
 	void testCreateEmployee_Success() throws Exception {
-		//Mock controller
 		mockMvc.perform(post("/api/v1/employees").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(employeeRequest))).andDo(print())
 				.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -134,11 +134,46 @@ public class EmployeeControllerIntegrationTest {
 	}
 
 	/* GetAll */
-	@DisplayName("Get all")
+	@DisplayName("Should retrieve all employees successfully")
 	@Test
 	void testGetAllEmployees_Success() throws Exception {
 
+		EmployeeRequest employeeRequest1= EmployeeRequest.builder()
+				.empName("Sachin Reddy").empDesignation("Senior Software Developer")
+				.empExperienceYears(new BigDecimal("9.0"))
+				.empSalary(new BigDecimal("1000000.0"))
+				.empPerformanceRating(5)
+				.build();
+		mockMvc.perform(post("/api/v1/employees").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(employeeRequest)))
+				.andExpect(status().isCreated()).andReturn();
+
+		mockMvc.perform(post("/api/v1/employees").contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(employeeRequest1)))
+				.andExpect(status().isCreated()).andReturn();
+        
+        mockMvc.perform(get("/api/v1/employees"))
+        		.andExpect(status().isOk())
+        		.andExpect(jsonPath("$.success").value(true))
+        		.andExpect(jsonPath("$.statusCode").value(200))
+        		.andExpect(jsonPath("$.message").value("All employees retrieved successfully"))
+        		.andExpect(jsonPath("$.data",hasSize(2)))
+        		.andExpect(jsonPath("$.path").value("/api/v1/employees"))
+        		.andExpect(jsonPath("$.timeStamp").isNotEmpty())
+        		.andDo(print());
+		
 	}
+	
+	@DisplayName("Should retrieve empty list when no employees exist")
+	@Test
+	void testGetAllEmployees_EmptyList() throws Exception {
+		
+		mockMvc.perform(get("/api/v1/employees"))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.success").value(true))
+		.andExpect(jsonPath("$.data",hasSize(0)));
+	}
+	
 
 	/* Update - Amol */
 	@DisplayName("Update")
@@ -207,6 +242,44 @@ public class EmployeeControllerIntegrationTest {
 //	}
 
 	// Preparation for frontend development -> Angular Basic commands
+	// Revise
+	// GetAll
+
+	/* Delete - Wasim */
+	@DisplayName("Should delete employee successfully")
+	@Test
+	void testDeleteEmployee_Success() throws Exception {
+
+		MvcResult result = mockMvc
+				.perform(post("/api/v1/employees").contentType(MediaType.APPLICATION_JSON)
+						.content(objectMapper.writeValueAsString(employeeRequest)))
+				.andExpect(status().isCreated())
+				 .andExpect(jsonPath("$.data.empId").exists())
+				 .andReturn();
+
+		String empId = objectMapper.readTree(result.getResponse().getContentAsString()).path("data").path("empId")
+				.asText();
+			// Act - Delete employee
+		mockMvc.perform(delete("/api/v1/employees/{id}", empId)).andExpect(status().isNoContent());
+		
+		  	// Assert - Verify deletion
+		mockMvc.perform(get("/api/v1/employees/{id}", empId)).andExpect(status().isNotFound());
+
+	}
+	
+	@DisplayName("Should return 404 when deleting non-existent employee")
+	@Test
+	void testDeleteEmployee_NotFound() throws Exception{
+		String invalidId="rewardlyEmp-20251118-190420-9489";
+		mockMvc.perform(delete("/api/v1/employees/{id}",invalidId))
+				.andExpect(status().isNotFound())
+				.andExpect(jsonPath("$.errorMessage").exists());
+	}
+	
+	
+	
+
+	// Preparation for front-end development -> Angular Basic commands
 	// Revise
 	// GetAll
 
