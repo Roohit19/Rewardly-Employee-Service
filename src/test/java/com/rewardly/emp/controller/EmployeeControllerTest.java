@@ -70,9 +70,10 @@ class EmployeeControllerTest {
 	// CreateEmployee
 	@Test
 	void testCreateEmployee() throws Exception {
-
+		//Service layer mock
 		when(employeeService.createEmployee(employeeRequest)).thenReturn(employeeResponse);
-
+		
+		//Mock web call
 		mockMvc.perform(post("/api/v1/employees").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(employeeRequest))).andDo(print())
 				.andExpect(status().isCreated()).andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -86,6 +87,7 @@ class EmployeeControllerTest {
 				.andExpect(jsonPath("$.data.empSalary").value(employeeResponse.getEmpSalary().doubleValue()))// 100000.00
 				.andExpect(jsonPath("$.path").value("/api/v1/employees"));
 
+		//verify number of calls
 		verify(employeeService, times(1)).createEmployee(employeeRequest);
 	}
 

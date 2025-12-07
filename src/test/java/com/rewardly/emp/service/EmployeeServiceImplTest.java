@@ -21,7 +21,6 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -451,23 +450,18 @@ class EmployeeServiceImplTest {
 	@Test
 	void testDeleteEmployee_NotFound() {
 		
-		//Calling the findById() -> empty object
-		
+		//Calling the findById() -> empty object		
 		when(employeeRepository.findById(invalidId)).thenReturn(Optional.empty());
 		
-		//throwError
-		
+		//throwError		
 		EmployeeNotFoundException excption = assertThrows(EmployeeNotFoundException.class, 
 					() -> employeeService.deleteEmployee(invalidId) );
 		
-		//verify message 
-		
-		assertEquals("Employee not found with ID: "+invalidId ,excption.getMessage());
-		
+		//verify message 		
+		assertEquals("Employee not found with ID: "+invalidId ,excption.getMessage());		
 		//System.out.println(excption.getMessage());
 		
-		//Verify number of hits
-		
+		//Verify number of hits		
 		verify(employeeRepository, times(1)).findById(invalidId);
 		verify(employeeRepository, never()).delete(any());		
 	}
